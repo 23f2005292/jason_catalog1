@@ -1,0 +1,35 @@
+name: Cache CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/demo
+          key: cache-447feb9
+
+      - name: prime-cache-447feb9
+        run: |
+          if [ "${{ steps.cache.outputs.cache-hit }}" == "true" ]; then
+            echo "Cache hit"
+          else
+            echo "Cache miss"
+          fi
+
+      - name: Save something to cache
+        run: |
+          mkdir -p ~/.cache/demo
+          echo "cached data" > ~/.cache/demo/data.txt
